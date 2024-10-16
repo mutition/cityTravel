@@ -49,7 +49,12 @@
       </el-card>
 
       <el-card  class="section-card">
-        <h3 class="weather-title">旅游建议</h3>
+        <div class="advice-setting">
+          <h3 class="weather-title">旅游建议</h3>
+          <span @click="getAdvice">
+        <el-icon size="25" color="blue"><Refresh /></el-icon>
+      </span>
+        </div>
         <p class="advice-item">{{ advice }}</p>
       </el-card>
 
@@ -214,6 +219,7 @@ const getMap = async() => {
 }
 
 const getAdvice = async () => {
+  advice.value="正在生成旅游建议..."
   advice.value=await askTongyi(`给我${cityName.value}的旅游建议，包括几月份合适旅游，住在哪里等，字数在200字左右，给我一段话不要分段`)
 }
 
@@ -347,6 +353,12 @@ const getBackgroundColor = (weather) => {
 .carousel-item-padding{
   padding-top: 20px;
   margin-left: 50px;
+}
+
+.advice-setting{
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .advice-item{
