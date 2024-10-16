@@ -94,10 +94,13 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { defineProps, watch } from 'vue';
 const cityName = ref();
-// 使用 defineProps 接收来自父组件的 props
+// 使用 defineProps 接收来自父组件的cityName
 const props = defineProps({
   cityName: String
 });
+
+
+// 发现cityName改变时调用各api
 watch(() => props.cityName, (newValue) => {
   cityName.value = newValue;
   changeInfoSource();
@@ -119,7 +122,6 @@ const scenicList =ref()
 const advice=ref()
 
 
-//询问通义简介
 const askTongyi = async (content) => {
   const apiEndpoint = 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
   const apiKey = 'sk-1fc2f2739d444a1690d390e9cfdd8b0c';
@@ -139,7 +141,6 @@ const askTongyi = async (content) => {
   };
 
   try {
-    // 使用 axios 发送 POST 请求
     const response = await axios.post(apiEndpoint, requestBody, {
       headers: {
         'Content-Type': 'application/json',
@@ -147,7 +148,6 @@ const askTongyi = async (content) => {
       }
     });
     console.log(response.data.choices[0].message.content);
-    // 假设 API 返回的数据结构包含回答在 choices 数组中
     if (response.data && response.data.choices && response.data.choices.length > 0) {
       return response.data.choices[0].message.content;
     } else {
@@ -158,8 +158,6 @@ const askTongyi = async (content) => {
     return '请求失败，请检查网络或 API 配置';
   }
 };
-
-// 调用函数时传递内容
 
 const changeInfoSource = async () => {
   console.log(`切换信息来源到 ${infoSource.value}`);
@@ -174,7 +172,7 @@ const changeInfoSource = async () => {
       response = await axios.get(`https://zh.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cityName.value)}`);
       generalInfo.value = response.data.extract;// 将简介内容赋值给 generalInfo
     } else if (infoSource.value === '通义千问') {
-      // 调用通义千问 API (需配置代理或使用实际接口)
+      // 调用通义千问 API
       response=await askTongyi(`给我${cityName.value}的简介，字数在两百字左右，给我一段话不要分段`)
       generalInfo.value = response; // 将简介内容赋值给 generalInfo
     }
@@ -195,8 +193,8 @@ const getWeather =async () => {
     weatherData.value=response.data;
     return true;
   } catch (error) {
-    console.error('请求失败:', error); // 打印错误信息
-    return false; // 返回 false 表示请求失败
+    console.error('请求失败:', error);
+    return false;
   }
 
 }
@@ -219,6 +217,7 @@ const getAdvice = async () => {
   advice.value=await askTongyi(`给我${cityName.value}的旅游建议，包括几月份合适旅游，住在哪里等，字数在200字左右，给我一段话不要分段`)
 }
 
+//按照天气信息选择卡片背景颜色
 const getBackgroundColor = (weather) => {
   switch (weather) {
     case '晴':
@@ -250,7 +249,6 @@ const getBackgroundColor = (weather) => {
   margin-bottom: 20px;
   justify-content: space-between;
 }
-
 
 
 .section-card {

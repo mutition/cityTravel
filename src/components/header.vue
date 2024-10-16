@@ -62,7 +62,6 @@ const searchCity = async () => {
 </script>
 
 <style scoped>
-/* 自定义 el-input 的背景颜色为灰色 */
 >>>.input-border-style .el-input__wrapper {
   background-color: lightgray;
 }
